@@ -24,6 +24,7 @@ _idsvr()
         --dump-config \
         --force-reload \
         --help \
+        --hsm-pin \
         --config-keystore \
         --load-config \
         --debug-hsm \
@@ -49,12 +50,19 @@ _idsvr()
     "
 
     case "${prev}" in
+        # Complete files
         -l|--load-config|-k|--config-keystore)
             COMPREPLY=( $(compgen -f ${cur}) )
             return 0
             ;;
+        # Complete hostnames
         -c|--config-service-host)
             COMPREPLY=( $(compgen -A hostname ${cur}) )
+            return 0
+            ;;
+        # Do not complete anything after arguments that require a value
+        -s|--server-id|-i|--hsm-pin)
+            COMPREPLY=( )
             return 0
             ;;
         *)
