@@ -49,11 +49,11 @@ _idsvr()
     "
 
     case "${prev}" in
-        -l|--load-config)
+        -l|--load-config|-k|--config-keystore)
             COMPREPLY=( $(compgen -f ${cur}) )
             return 0
             ;;
-        -c|--config-service-host|-k|--config-keystore)
+        -c|--config-service-host)
             COMPREPLY=( $(compgen -A hostname ${cur}) )
             return 0
             ;;
