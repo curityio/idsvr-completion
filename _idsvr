@@ -1,0 +1,80 @@
+#compdef idsvr run dr=run idsh
+
+#setopt local_options xtrace
+
+local config_paths=(
+    "/facilities/http"
+    "/facilities/data-sources"
+    "/facilities/email-providers"
+    "/facilities/sms-providers"
+    "/facilities/crypto/ssl/server-truststore"
+    "/facilities/crypto/ssl/client-truststore"
+    "/facilities/crypto/ssl/client-keystores"
+    "/facilities/crypto/signing-keys"
+    "/facilities/crypto/signature-verification-keys"
+    "/facilities/crypto/signer-truststores"
+    "/facilities/client-attestation"
+    "/environments/environment/cluster"
+    "/environments/environment/admin-service/http"
+    "/environments/environment/admin-service/services/service-role"
+    "/environments/environment/reporting"
+    "/environments/environment/alarms"
+    "/profiles"
+    "/processing/license-key"
+    "/processing/procedures"
+    "/processing/event-listeners"
+    "/processing/account-managers"
+    "/processing/credential-managers"
+)
+local arguments=()
+
+case "$service" in
+    idsh)
+        arguments+=(
+            "(--user -u)"{--user,-u}"[user ID]:user ID:_users"
+            "(--stop-on-error -s)"{--stop-on-error,-s}"[stop on error]"
+            "(--noninteractive -N --interactive -n)"{--interactive,-n}"[force interactive mode]"
+            "(--interactive -n --noninteractive -N)"{--noninteractive,-N}"[force noninteractive mode]"
+            "(: * -)"{-h,--help}"[print a short usage message and exit]"
+            '1::file:_files'
+        )
+        ;;
+    run|dr)
+        # These are args used by Curitians during internal development. They don't do anything
+        # when passed to the actual ID server -- except cause errors. Don't use these unless you 
+        # want a job ;-)
+        arguments+=(
+            "(--no-debugger -D)"{--no-debugger,-D}"[disable debugging of the JVM]"
+            "(--no-services -S)"{--no-services,-S}"[disable all virtual services]"
+            "(--no-hsqldb -H)"{--no-hsqldb,-H}"[disable HSQLDB server]"
+            "(--ssp -o)"{--ssp=,-o}"[port of the socket server]:port:_guard '[0-9]#' 'numeric value'"
+        )
+        ;&
+    *)
+        arguments+=(
+            "-"
+            "regular"
+            "(commands --config-keystore -k)"{--config-keystore=,-k}"[the configuration server connection keystore]:config keystore:_files"
+            "(commands --config-service-host -c)"{--config-service-host=,-c}"[hostname or IP address of the configuration service]:host:_hosts"
+            "(commands --config-service-port -p)"{--config-service-port=,-p}"[port of the configuration service]:port:_guard '[0-9]#' 'numeric value'"
+            "(commands --config-encryption-key -e)"{--config-encryption-key=,-e}"[the key used to encrypt the configuration]:config encryption key: "
+            "(commands --debug-hsm -m)"{--debug-hsm,-m}"[include HSM-related debug log messages in the server log]"
+            "(commands --service-name -N)"{--serivce-name=,-N}"[Descriptive name for this node]:service name"
+            "(commands --service-role -s)"{--service-role=,-s}"[The service role for this node]:service role"
+            "(commands --hsm-pin -i)"{--hsm-pin=,-i}"[PIN for logging into the HSM]:PIN:_files"
+            "(commands -a --admin -n --no-admin)"{--admin,-a}"[whether the server should run as an admin node]"
+            "(commands -n --no-admin -a --admin)"{--no-admin,-n}"[whether the server should not run as an admin node]"
+            "(: * -)"{-v,--version}"[prints the version and exits]"
+            "(: * -)"{-h,--help}"[print a short usage message and exit]"
+            '-'
+            "(commands)"
+            {--dump-config=,-d}"[dumps the entire configuration to the console]:configuration path:_multi_parts / '($config_paths)'"
+            {--dump-config-with-params=,-D}"[dumps the entire configuration to the console preserving substitution parameters]:configuration path:_multi_parts / '($config_paths)'"
+            {--load-config=,-l}"[delete and replace the parts of the configuration with those present in the given file]:configuration file:_files"
+            {--reload,-r}"[reloads the configuration in ${IDSVR_HOME:-\$IDSVR_HOME}/etc/init and merges with the existing configuration]"
+            {--force-reload,-f}"[replaces the current configuration with the configuration from ${IDSVR_HOME:-\$IDSVR_HOME}/etc/init]"
+        )
+        ;;
+esac
+
+_arguments -A "-*" -S $arguments
