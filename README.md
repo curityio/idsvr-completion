@@ -1,7 +1,7 @@
 # Completion scripts for the idsvr command
 
-[![Quality](https://curity.io/assets/images/badges/idsvr-completion-quality.svg)](https://curity.io/resources/code-examples/status/)
-[![Availability](https://curity.io/assets/images/badges/idsvr-completion-availability.svg)](https://curity.io/resources/code-examples/status/)
+[![Quality](https://img.shields.io/badge/quality-demo-red)](https://curity.io/resources/code-examples/status/)
+[![Availability](https://img.shields.io/badge/availability-source-blue)](https://curity.io/resources/code-examples/status/)
 
 This repository contain scripts for completion of arguments for the `idsvr` command.
 
